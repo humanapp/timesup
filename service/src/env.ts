@@ -67,7 +67,7 @@ async function loadEnvironmentOnceAsync() {
             client.getSecretValue({ SecretId: envSecretName! }, (err, data) => {
                 if (err) {
                     return reject(
-                        `Failed to read env from AWS. ${err.message}`
+                        `Failed to read ${envSecretName} from AWS. ${err.message}`
                     );
                 }
                 let secret: string | undefined;

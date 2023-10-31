@@ -2,6 +2,8 @@ import { server } from "./server";
 import path from "path";
 import fastifystatic from "@fastify/static";
 import * as devices from "./devices";
+import * as shutdowns from "./shutdowns";
+//import * as messages from "./message";
 
 export async function initAsync() {
     server.register(fastifystatic, {
@@ -9,4 +11,6 @@ export async function initAsync() {
     });
 
     await devices.initAsync();
+    await shutdowns.initAsync();
+    //await messages.initAsync();
 }

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import * as env from "./env";
 import * as rest from "./rest";
 import * as server from "./server";
+import * as db from "./db";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ process
 
 async function initAsync() {
     await env.initAsync();
+    await db.initAsync();
     await rest.initAsync();
 }
 
