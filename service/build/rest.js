@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initAsync = void 0;
+exports.startAsync = exports.initAsync = void 0;
 const server_1 = require("./server");
 const path_1 = __importDefault(require("path"));
 const static_1 = __importDefault(require("@fastify/static"));
@@ -42,4 +42,8 @@ async function initAsync() {
     //await messages.initAsync();
 }
 exports.initAsync = initAsync;
+async function startAsync() {
+    await shutdowns.startAsync();
+}
+exports.startAsync = startAsync;
 //# sourceMappingURL=rest.js.map

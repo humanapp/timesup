@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initAsync = void 0;
+exports.startAsync = exports.initAsync = void 0;
 const server_1 = require("./server");
 const env = __importStar(require("./env"));
 const db = __importStar(require("./db"));
@@ -49,7 +49,7 @@ async function initAsync() {
         if (passkey !== env.getSetting("PASSKEY")) {
             return res.status(401).send();
         }
-        const { deviceid, shutdownIn } = req.body;
+        const { deviceid, durationMins } = req.body;
         const device = await db.getDeviceAsync(deviceid);
         if (!device) {
             return res.status(404).send();
@@ -57,9 +57,8 @@ async function initAsync() {
         const event = {
             id: util.uniqueId(),
             type: "shutdown-in",
-            createdAt: Date.now(),
             startedAt: Date.now(),
-            duration: shutdownIn,
+            durationMins,
         };
         await db.setShutdownAsync(deviceid, event);
         return res.status(200).send();
@@ -78,7 +77,6 @@ async function initAsync() {
         const event = {
             id: util.uniqueId(),
             type: "shutdown-at",
-            createdAt: Date.now(),
             shutdownAt,
         };
         await db.setShutdownAsync(deviceid, event);
@@ -99,4 +97,38 @@ async function initAsync() {
     });
 }
 exports.initAsync = initAsync;
+const REFRESH_INTERVAL = 5 * 60 * 1000;
+async function refreshAsync() {
+    try {
+        const dvs = Object.values(await db.getDevicesAsync());
+        for (const dv of dvs) {
+            const sht = await db.getShutdownAsync(dv.id);
+            if (!sht)
+                continue;
+            switch (sht.type) {
+                case "shutdown-at": {
+                    if (sht.shutdownAt < Date.now()) {
+                        db.delShutdownAsync(dv.id);
+                    }
+                    break;
+                }
+                case "shutdown-in": {
+                    if (sht.startedAt + sht.durationMins * 60 * 1000 < Date.now()) {
+                        db.delShutdownAsync(dv.id);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    catch (e) {
+        console.error(e.toString());
+    }
+    setTimeout(refreshAsync, (REFRESH_INTERVAL + Math.random() * 1000) | 0);
+}
+async function startAsync() {
+    // Periodically clear out stale shutdowns
+    setTimeout(refreshAsync, REFRESH_INTERVAL);
+}
+exports.startAsync = startAsync;
 //# sourceMappingURL=shutdowns.js.map

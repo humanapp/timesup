@@ -48,6 +48,7 @@ async function initAsync() {
 async function startAsync() {
     await env.startAsync();
     await server.startAsync();
+    await rest.startAsync();
 }
 (async () => {
     await initAsync();
