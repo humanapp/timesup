@@ -4,40 +4,7 @@ import * as env from "./env";
 import * as db from "./db";
 import * as util from "./util";
 
-const REFRESH_INTERVAL = 5 * 60 * 1000;
-
-async function refreshAsync() {
-    try {
-        const dvs = Object.values(await db.getDevicesAsync());
-        for (const dv of dvs) {
-            const sht = await db.getShutdownAsync(dv.id);
-            if (!sht) continue;
-            switch (sht.type) {
-                case "shutdown-at": {
-                    if (sht.shutdownAt < Date.now()) {
-                        db.delShutdownAsync(dv.id);
-                    }
-                    break;
-                }
-                case "shutdown-in": {
-                    if (sht.startedAt + sht.durationMins * 60 * 1000 < Date.now()) {
-                        db.delShutdownAsync(dv.id);
-                    }
-                    break;
-                }
-            }
-        }
-    } catch (e: any) {
-        console.error(e.toString());
-    }
-
-    setTimeout(refreshAsync, (REFRESH_INTERVAL + Math.random() * 1000) | 0);
-}
-
 export async function initAsync() {
-    // Periodically clear out stale shutdowns
-    setTimeout(refreshAsync, REFRESH_INTERVAL);
-
     // GET /api/shutdown
     server.get<{
         Querystring: {
@@ -124,4 +91,39 @@ export async function initAsync() {
         }
         await db.delShutdownAsync(deviceid);
     });
+}
+
+const REFRESH_INTERVAL = 5 * 60 * 1000;
+
+async function refreshAsync() {
+    try {
+        const dvs = Object.values(await db.getDevicesAsync());
+        for (const dv of dvs) {
+            const sht = await db.getShutdownAsync(dv.id);
+            if (!sht) continue;
+            switch (sht.type) {
+                case "shutdown-at": {
+                    if (sht.shutdownAt < Date.now()) {
+                        db.delShutdownAsync(dv.id);
+                    }
+                    break;
+                }
+                case "shutdown-in": {
+                    if (sht.startedAt + sht.durationMins * 60 * 1000 < Date.now()) {
+                        db.delShutdownAsync(dv.id);
+                    }
+                    break;
+                }
+            }
+        }
+    } catch (e: any) {
+        console.error(e.toString());
+    }
+
+    setTimeout(refreshAsync, (REFRESH_INTERVAL + Math.random() * 1000) | 0);
+}
+
+export async function startAsync() {
+    // Periodically clear out stale shutdowns
+    setTimeout(refreshAsync, REFRESH_INTERVAL);
 }

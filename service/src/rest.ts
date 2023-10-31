@@ -14,3 +14,7 @@ export async function initAsync() {
     await shutdowns.initAsync();
     //await messages.initAsync();
 }
+
+export async function startAsync() {
+  await shutdowns.startAsync();
+}
