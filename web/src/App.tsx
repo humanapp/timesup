@@ -1,8 +1,15 @@
-import React from "react";
-import logo from "./logo.svg";
+import { useContext } from "react";
+import { AppStateContext } from "./state/AppStateContext";
+import Background from "./components/Background";
+import TopBar from "./components/TopBar";
 
-function App() {
-    return <div className='App'>HI</div>;
-}
+export const App = () => {
+  const { state, dispatch } = useContext(AppStateContext);
 
-export default App;
+  return (
+    <>
+      <Background />
+      <TopBar />
+    </>
+  );
+};
