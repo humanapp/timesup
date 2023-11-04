@@ -1,3 +1,5 @@
+import { ModalType } from "../types";
+
 type ActionBase = {
   type: string;
 };
@@ -11,7 +13,12 @@ type SetPasskey = ActionBase & {
   passkey: string;
 };
 
-export type Action = SetPasskey;
+type SetModal = ActionBase & {
+  type: "SET_MODAL";
+  modal: ModalType | undefined;
+}
+
+export type Action = SetPasskey | SetModal;
 
 /**
  * Action creators
@@ -20,4 +27,9 @@ export type Action = SetPasskey;
 export const setPasskey = (passkey: string): SetPasskey => ({
   type: "SET_PASSKEY",
   passkey,
+});
+
+export const setModal = (modal: ModalType | undefined): SetModal => ({
+  type: "SET_MODAL",
+  modal
 });

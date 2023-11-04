@@ -1,5 +1,8 @@
 @tailwind base;
 @layer base {
+  body {
+    @apply transition-all;
+  }
   html {
     @apply text-slate-100;
   }

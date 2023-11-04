@@ -11,5 +11,11 @@ export default function reducer(state: AppState, action: Action): AppState {
         passkey: action.passkey,
       };
     }
+    case "SET_MODAL": {
+      return {
+        ...state,
+        modal: action.modal,
+      };
+    }
   }
 }

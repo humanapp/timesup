@@ -1,9 +1,19 @@
 import { useContext } from "react";
 import { AppStateContext } from "../state/AppStateContext";
 import { Navbar, Dropdown } from "flowbite-react";
+import { setModal } from "../transforms/setModal";
+import { setPasskey } from "../transforms/setPasskey";
 
 const Render = () => {
   const { state, dispatch } = useContext(AppStateContext);
+
+  const signinClicked = () => {
+    setModal("enter-passkey");
+  }
+
+  const signoutClicked = () => {
+    setPasskey("");
+  }
 
   return (
     <Navbar
@@ -16,8 +26,8 @@ const Render = () => {
       </Navbar.Brand>
       <div className="flex">
         <Dropdown arrowIcon={true} inline label={<span>Options</span>}>
-          {!state.passkey && <Dropdown.Item>Sign In</Dropdown.Item>}
-          {state.passkey && <Dropdown.Item>Sign Out</Dropdown.Item>}
+          {!state.passkey && <Dropdown.Item onClick={signinClicked}>Sign In</Dropdown.Item>}
+          {state.passkey && <Dropdown.Item onClick={signoutClicked}>Sign Out</Dropdown.Item>}
         </Dropdown>
       </div>
     </Navbar>
