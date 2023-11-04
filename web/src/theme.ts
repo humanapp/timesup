@@ -3,7 +3,8 @@ import { CustomFlowbiteTheme } from "flowbite-react";
 const theme: CustomFlowbiteTheme = {
   button: {
     color: {
-      primary: "bg-red-500 hover:bg-red-600",
+      primary: "bg-violet-500 hover:bg-violet-600",
+      info: "bg-slate-500 hover:bg-slate-600",
     },
   },
   modal: {
