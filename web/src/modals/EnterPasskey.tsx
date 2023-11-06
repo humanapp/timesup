@@ -1,15 +1,14 @@
 import * as React from "react";
-import { useContext, useRef, useState, useCallback } from "react";
-import { AppStateContext } from "../state/AppStateContext";
-import { Button, Label, Modal, TextInput } from "../elements";
+import { useRef, useState, useCallback } from "react";
+import { Label, TextInput } from "../elements";
 import { setPasskey } from "../transforms/setPasskey";
+import Confirm from "./Confirm";
 
 type Props = {
   onClose: () => void;
 };
 
 const Render: React.FC<Props> = ({ onClose }) => {
-  const { state, dispatch } = useContext(AppStateContext);
   const inputRef = useRef<HTMLInputElement>(null);
   const [passkeyValue, setPasskeyValue] = useState<string>("");
 
@@ -27,30 +26,16 @@ const Render: React.FC<Props> = ({ onClose }) => {
   }, [passkeyValue]);
 
   return (
-    <Modal
-      show={true}
-      dismissible={true}
-      onClose={onClose}
-      position="center"
-      initialFocus={inputRef}
-    >
-      <Modal.Header>PASSKEY</Modal.Header>
-      <Modal.Body>
-        <Label htmlFor="passkey">Enter the value</Label>
-        <TextInput
-          type="text"
-          id="passkey"
-          ref={inputRef}
-          sizing="sm"
-          onChange={passkeyChanged}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button color="primary" onClick={okClicked} disabled={!inputRef.current?.value}>
-          OK
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <Confirm onCancel={onClose} onConfirm={okClicked} headerText={"Sign in"} confirmDisabled={!passkeyValue}>
+      <Label htmlFor="passkey">Enter account name</Label>
+      <TextInput
+        type="text"
+        id="passkey"
+        ref={inputRef}
+        sizing="sm"
+        onChange={passkeyChanged}
+      />
+    </Confirm>
   );
 };
 

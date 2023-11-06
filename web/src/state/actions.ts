@@ -16,7 +16,7 @@ type SetPasskey = ActionBase & {
 type SetModal = ActionBase & {
   type: "SET_MODAL";
   modal: ModalType | undefined;
-}
+};
 
 export type Action = SetPasskey | SetModal;
 
@@ -31,5 +31,5 @@ export const setPasskey = (passkey: string): SetPasskey => ({
 
 export const setModal = (modal: ModalType | undefined): SetModal => ({
   type: "SET_MODAL",
-  modal
+  modal,
 });

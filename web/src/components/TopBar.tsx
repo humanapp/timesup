@@ -9,11 +9,11 @@ const Render = () => {
 
   const signinClicked = () => {
     setModal("enter-passkey");
-  }
+  };
 
   const signoutClicked = () => {
-    setPasskey("");
-  }
+    setModal("forget-you");
+  };
 
   return (
     <Navbar
@@ -26,8 +26,12 @@ const Render = () => {
       </Navbar.Brand>
       <div className="flex">
         <Dropdown arrowIcon={true} inline label={<span>Options</span>}>
-          {!state.passkey && <Dropdown.Item onClick={signinClicked}>Sign In</Dropdown.Item>}
-          {state.passkey && <Dropdown.Item onClick={signoutClicked}>Sign Out</Dropdown.Item>}
+          {!state.passkey && (
+            <Dropdown.Item onClick={signinClicked}>Sign In</Dropdown.Item>
+          )}
+          {state.passkey && (
+            <Dropdown.Item onClick={signoutClicked}>Sign Out</Dropdown.Item>
+          )}
         </Dropdown>
       </div>
     </Navbar>

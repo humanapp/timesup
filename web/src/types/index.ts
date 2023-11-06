@@ -1,1 +1,1 @@
-export type ModalType = "enter-passkey";
+export type ModalType = "enter-passkey" | "forget-you";
